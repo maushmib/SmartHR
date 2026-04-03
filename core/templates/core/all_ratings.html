@@ -1,0 +1,47 @@
+<!-- templates/all_ratings.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Employee Ratings</title>
+    <style>
+        body { font-family: sans-serif; background: #fafafa; }
+        h2 { text-align: center; color: #444; }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #006699;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h2>Performance Ratings - All Employees</h2>
+    <table>
+        <tr>
+            <th>Employee</th>
+            <th>Rated By</th>
+            <th>Period</th>
+            <th>Rating</th>
+            
+        </tr>
+        {% for rating in ratings %}
+        <tr>
+    <td>{{ rating.employee.name }}</td>  <!-- or .user.username depending on your model -->
+    <td>{{ rating.rated_by.username }}</td>
+    <td>{{ rating.date_rated }}</td>
+    <td>{{ rating.rating }}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

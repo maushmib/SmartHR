@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="rating-container">
+  <h2>Resume Matcher (Select Employee & Paste JD)</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Employee:</label>
+      <select name="employee_id" required>
+        {% for e in employees %}
+          <option value="{{ e.id }}">{{ e.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Job Description:</label>
+      <textarea name="jd" rows="6" required></textarea>
+    </div>
+
+    <button class="btn" type="submit">Match</button>
+  </form>
+
+  {% if match_score is not None %}
+    <hr>
+    <h3>Match Score for {{ chosen_emp.name }}: {{ match_score }}%</h3>
+    <a class="btn" href="{{ chosen_emp.resume_file.url }}" target="_blank">View Resume</a>
+  {% endif %}
+</div>
+{% endblock %}

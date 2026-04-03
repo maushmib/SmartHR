@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 30px;
+        }
+        .container {
+            width: 400px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .errorlist {
+            color: red;
+            font-size: 13px;
+            list-style: none;
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Register</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <label for="id_username">Username</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+
+        <label for="id_email">Email</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+
+       <label for="id_role">Role</label>
+<select name="role" id="id_role" required>
+    
+    <option value="HR">HR</option>
+    <option value="TL">Team Lead</option>
+    <option value="EMP">Employee</option>
+    <option value="Manager">Manager</option>
+    <option value="Guest">Guest</option>
+
+</select>
+
+
+        <label for="id_password1">Password</label>
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+
+        <label for="id_password2">Confirm Password</label>
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+
+       
+
+        <button type="submit" class="btn">Sign Up</button>
+    </form>
+</div>
+</body>
+</html>

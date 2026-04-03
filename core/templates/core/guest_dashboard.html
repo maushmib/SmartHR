@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+
+{% block title %}Guest Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ candidate.name }}</h2>
+<p>Email: {{ candidate.email }}</p>
+
+<p>Authenticity: {{ candidate.status }}</p>   <!-- 👈 Show authenticity result -->
+
+<hr>
+<h3>Upload Resume</h3>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="resume_file" required>
+    <button type="submit" class="btn">Upload</button>
+</form>
+
+{% if candidate.resume_file %}
+<p>Current Resume: <a href="{{ candidate.resume_file.url }}" target="_blank">Download</a></p>
+{% endif %}
+
+{% endblock %}

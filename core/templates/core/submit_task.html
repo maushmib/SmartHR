@@ -1,0 +1,5 @@
+<form method="POST" action="{% url 'submit_task' task.id %}">
+  {% csrf_token %}
+  <!-- your input fields -->
+  <button type="submit">Submit</button>
+</form>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Attrition Predictor</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Employee Attrition Predictor</h2>
+  <table class="table table-bordered">
+    <thead class="table-primary">
+      <tr>
+        <th>Employee Name</th>
+        <th>Department</th>
+        <th>Job Role</th>
+        <th>Monthly Income</th>
+        <th>Attrition Prediction</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for emp in predictions %}
+        <tr>
+          <td>{{ emp.name }}</td>
+          <td>{{ emp.department }}</td>
+          <td>{{ emp.job_role }}</td>
+          <td>{{ emp.monthly_income }}</td>
+          <td>
+            {% if emp.prediction == 'Yes' %}
+              <span class="text-danger">Likely to Leave</span>
+            {% elif emp.prediction == 'No' %}
+              <span class="text-success">Likely to Stay</span>
+            {% else %}
+              Unavailable
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

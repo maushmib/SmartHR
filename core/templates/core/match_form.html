@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Match Resume</title>
+</head>
+<body>
+    <h2>Match Employee Resume with Job Description</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="employee">Select Employee:</label>
+        <select name="employee_id" required>
+            {% for emp in employees %}
+                <option value="{{ emp.id }}">{{ emp.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="jd">Enter Job Description:</label><br>
+        <textarea name="jd_text" rows="5" cols="50" required></textarea><br><br>
+
+        <button type="submit">Match</button>
+    </form>
+</body>
+</html>

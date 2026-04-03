@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skill Gap Analysis</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        .skills { margin: 15px 0; }
+        .skill-badge { display: inline-block; background: #007bff; color: #fff; padding: 6px 12px; border-radius: 5px; margin: 5px; }
+        .course-card { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .course-card h3 { margin: 0; color: #444; }
+        .course-card a { color: #007bff; text-decoration: none; }
+        .course-card a:hover { text-decoration: underline; }
+        .score { font-size: 0.9em; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Skill Gap Analysis for {{ employee.name }}</h1>
+        <h2>Project: {{ project.name }}</h2>
+
+        <div class="skills">
+            <h3>Missing Skills:</h3>
+            {% if missing_skills %}
+                {% for skill in missing_skills %}
+                    <span class="skill-badge">{{ skill }}</span>
+                {% endfor %}
+            {% else %}
+                <p>No missing skills 🎉</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <h3>Recommended Courses (via ML Model):</h3>
+            {% if recommended_courses %}
+                {% for course in recommended_courses %}
+                    <div class="course-card">
+                        <h3>{{ course.name }}</h3>
+                        <p><b>Provider:</b> {{ course.provider }}</p>
+                        <p><a href="{{ course.url }}" target="_blank">Go to Course</a></p>
+                        {% if course.score %}
+                            <p class="score">Similarity Score: {{ course.score|floatformat:2 }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No matching courses found 😔</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

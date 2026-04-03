@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Candidate Resumes</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Resume</th>
+      <th>Authenticity</th>
+     
+    </tr>
+    {% for c in candidates %}
+    <tr>
+      <td>{{ c.name }}</td>
+      <td>{{ c.email }}</td>
+      <td>
+        {% if c.resume_file %}
+          <a href="{{ c.resume_file.url }}" target="_blank">View Resume</a>
+        {% else %}
+          No Resume
+        {% endif %}
+      </td>
+      <td>{{ c.status }}</td>   <!-- 👈 Changed from c.authenticity to c.status -->
+      
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

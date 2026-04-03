@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="rating-container">
+  <h2>Upload / Replace Your Resume (PDF or DOCX)</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="resume_file" accept=".pdf,.doc,.docx" required>
+    <button class="btn" type="submit">Upload</button>
+  </form>
+  {% if employee.resume_file %}
+    <p class="mt-2">Current file: <a href="{{ employee.resume_file.url }}" target="_blank">{{ employee.resume_file.name }}</a></p>
+  {% endif %}
+</div>
+{% endblock %}

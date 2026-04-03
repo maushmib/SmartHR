@@ -1,0 +1,6 @@
+<!-- templates/approve_task.html -->
+<h2>Approve Task: {{ task }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Approve</button>
+</form>

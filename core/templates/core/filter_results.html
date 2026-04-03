@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Filtered Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container my-5 p-4 bg-white rounded shadow">
+    <h3>🎯 Filter Results</h3>
+
+    {% if tasks %}
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Team Lead</th>
+                    <th>Project</th>
+                    <th>Date Assigned</th>
+                    <th>Submitted</th>
+                    <th>Approved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tasks %}
+                    <tr>
+                        <td>{{ t.employee.name }}</td>
+                        <td>{{ t.employee.team_lead.name }}</td>
+                        <td>{{ t.project.name }}</td>
+                        <td>{{ t.date_assigned }}</td>
+                        <td>{{ t.submitted }}</td>
+                        <td>{{ t.approved }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning mt-4">
+            No results found matching the selected filters.
+        </div>
+    {% endif %}
+
+    <a href="{% url 'filter_page' %}" class="btn btn-secondary mt-3">🔙 Back to Filter</a>
+    <a href="{% url 'hr_dashboard' %}" class="btn btn-outline-primary mt-3">🏠 Dashboard</a>
+</div>
+
+</body>
+</html>

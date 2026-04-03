@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>Chatbot</h2>
+<div id="chatbox" style="border:1px solid #ccc;padding:10px;height:300px;overflow-y:auto;"></div>
+
+<input type="text" id="user_input" placeholder="Ask me about employees or tasks..." style="width:70%;">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+function sendMessage(){
+    let message = document.getElementById("user_input").value;
+    if(!message) return;
+    
+    let chatbox = document.getElementById("chatbox");
+    chatbox.innerHTML += "<b>You:</b> " + message + "<br>";
+
+    fetch("{% url 'ask_chatbot' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: "message=" + encodeURIComponent(message)
+    })
+    .then(res => res.json())
+    .then(data => {
+        chatbox.innerHTML += "<b>Bot:</b> " + data.answer + "<br>";
+        chatbox.scrollTop = chatbox.scrollHeight;
+    });
+
+    document.getElementById("user_input").value = "";
+}
+</script>
+{% endblock %}

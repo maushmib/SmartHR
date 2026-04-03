@@ -1,0 +1,8 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div style="padding: 20px;">
+    <h2>Attrition Prediction for {{ employee.name }}</h2>
+    <p><strong>Result:</strong> {{ result }}</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+  </div>
+{% endblock %}

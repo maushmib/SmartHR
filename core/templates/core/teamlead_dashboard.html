@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Lead Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    table {
+      max-width: 900px;
+      margin: 0 auto 30px;
+      border-collapse: collapse;
+      width: 100%;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    nav {
+      background-color: #3498db; 
+      padding: 15px 20px; 
+      color: white; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    nav a {
+      color: white; 
+      text-decoration: none; 
+      font-weight: bold; 
+      background-color: #e74c3c; 
+      padding: 8px 14px; 
+      border-radius: 4px;
+    }
+    /* Buttons container */
+    .button-group {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      text-align: center;
+      gap: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    /* Common button styles */
+    .btn {
+      background-color: #27ae60; /* green */
+      color: white;
+      font-weight: 600;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #1e8449;
+    }
+    /* Assign task button */
+    .assign-btn {
+      background-color: #2980b9; /* blue */
+      padding: 12px 28px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    .assign-btn:hover {
+      background-color: #1c5980;
+    }
+    /* Edit and Delete buttons */
+.action-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* Edit button - orange */
+.action-btn.edit {
+  background-color: #f39c12;
+}
+
+.action-btn.edit:hover {
+  background-color: #d35400;
+}
+
+/* Delete button - red */
+.action-btn.delete {
+  background-color: #e74c3c;
+}
+
+.action-btn.delete:hover {
+  background-color: #c0392b;
+}
+
+  </style>
+</head>
+<body>
+<nav>
+  <div style="font-size: 20px; font-weight: bold;">Team Lead Dashboard</div>
+  <div>
+    <a href="{% url 'give_rating' %}" class="btn">Give Performance Rating</a>
+   
+    
+
+    <a href="{% url 'logout' %}">Logout</a>
+  </div>
+</nav>
+
+<h2>Assigned Tasks</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Employee</th>
+      <th>Description</th>
+      <th>Date Assigned</th>
+      <th>Approved</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for task in tasks %}
+      <tr>
+        <td>{{ task.project.name }}</td>
+        <td>{{ task.employee }}</td>
+        <td>{{ task.description }}</td>
+        <td>{{ task.date_assigned|date:"M d, Y" }}</td>
+        <td>
+  
+    {% if task.submitted and not task.approved %}
+        <form method="POST" action="{% url 'approve_task' task.id %}">
+            {% csrf_token %}
+            <button type="submit">Approve</button>
+        </form>
+    {% elif task.approved %}
+        <p><em>Approved on {{ task.date_submitted }}</em></p>
+    {% else %}
+        <p><em>Not submitted yet</em></p>
+    {% endif %}
+
+</td>
+       <td>
+  <a href="{% url 'edit_task' task.id %}" class="action-btn edit">Edit</a>
+  <a href="{% url 'delete_task' task.id %}" class="action-btn delete" onclick="return confirm('Are you sure?');">Delete</a>
+</td>
+
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="6">No tasks assigned yet.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="button-group">
+  <!-- Choose Project (projects assigned to this TL) -->
+  <form action="{% url 'choose_project' %}" method="get" style="display:inline;">
+    <button type="submit" class="btn">Choose Project</button>
+  </form>
+
+  <!-- Assign Task (only TL's employees) -->
+  <a href="{% url 'assign_task' %}" class="btn assign-btn">Assign Task</a>
+
+  <!-- Smart Assign (only TL's employees) -->
+  <a href="{% url 'smart_assign' %}" class="btn assign-btn">Smart Assign Task</a>
+</div>
+
+</body>
+</html>

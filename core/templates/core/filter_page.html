@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Filter Tasks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container my-5 p-4 bg-white rounded shadow">
+    <h2 class="mb-4">🔍 Filter Tasks</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <div class="col">
+                <label>Employee:</label>
+                <select name="employee_id" class="form-select">
+                    <option value="">All</option>
+                    {% for emp in employees %}
+                        <option value="{{ emp.id }}">{{ emp.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label>Team Lead:</label>
+                <select name="team_lead_id" class="form-select">
+                    <option value="">All</option>
+                    {% for lead in team_leads %}
+                        <option value="{{ lead.id }}">{{ lead.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label>Project:</label>
+                <select name="project_id" class="form-select">
+                    <option value="">All</option>
+                    {% for proj in projects %}
+                        <option value="{{ proj.id }}">{{ proj.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label>Submitted:</label>
+                <select name="submitted" class="form-select">
+                    <option value="">All</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>Approved:</label>
+                <select name="approved" class="form-select">
+                    <option value="">All</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply Filter</button>
+        <a href="{% url 'hr_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </form>
+
+    {% if filtered_tasks %}
+        <hr>
+        <h4 class="mt-4">📋 Filtered Task Results</h4>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Team Lead</th>
+                    <th>Project</th>
+                    <th>Date Assigned</th>
+                    <th>Submitted</th>
+                    <th>Approved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in filtered_tasks %}
+                    <tr>
+                        <td>{{ t.employee.name }}</td>
+                        <td>{{ t.employee.team_lead.name }}</td>
+                        <td>{{ t.project.name }}</td>
+                        <td>{{ t.date_assigned }}</td>
+                        <td>{{ t.submitted }}</td>
+                        <td>{{ t.approved }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif filtered_tasks is not None %}
+        <div class="alert alert-warning mt-4">No results found.</div>
+    {% endif %}
+</div>
+
+</body>
+</html>

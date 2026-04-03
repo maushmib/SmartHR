@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HR Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+        background-color: #f7f9fc;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    }
+    .table thead {
+        background-color: #007bff;
+        color: white;
+    }
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+    .filter-form label {
+        font-weight: bold;
+    }
+    /* Chatbot floating button */
+    #chatbot-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+<nav style="background-color: #3498db; padding: 15px 20px; color: white; display: flex; justify-content: space-between;">
+  <div style="font-size: 20px; font-weight: bold;">HR Dashboard</div>
+  <div>
+    <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    <a href="{% url 'all_ratings' %}" class="btn btn-light">View All Ratings Report</a>
+    <a href="{% url 'resume_match' %}" class="btn btn-light">Match Resume & JD</a>
+    <a href="{% url 'attrition_prediction' %}" class="btn btn-light">Attrition Predictor</a>
+    <a href="{% url 'hr_candidates' %}" class="btn btn-primary">View Guest Resumes</a>
+  </div>
+</nav>
+
+<div class="dashboard-container">
+  <h3 class="mb-4">Employee Task Summary</h3>
+
+  <!-- Filter Dropdown Button -->
+  <div class="mb-3">
+    <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#filterSection" aria-expanded="false" aria-controls="filterSection">
+      🔍 Filter Options
+    </button>
+  </div>
+
+  <!-- FILTER FORM -->
+  <div class="collapse" id="filterSection">
+    <form method="get" class="row g-3 mb-4 filter-form">
+      <div class="col-md-3">
+        <label for="employee">Employee</label>
+        <select name="employee" class="form-select">
+          <option value="all">All</option>
+          {% for emp in employees %}
+            <option value="{{ emp.id }}" {% if filters.employee == emp.id|stringformat:"s" %}selected{% endif %}>{{ emp.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="team_lead">Team Lead</label>
+        <select name="team_lead" class="form-select">
+          <option value="all">All</option>
+          {% for tl in team_leads %}
+            <option value="{{ tl.id }}" {% if filters.team_lead == tl.id|stringformat:"s" %}selected{% endif %}>{{ tl.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="project">Project</label>
+        <select name="project" class="form-select">
+          <option value="all">All</option>
+          {% for proj in projects %}
+            <option value="{{ proj.id }}" {% if filters.project == proj.id|stringformat:"s" %}selected{% endif %}>{{ proj.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="submitted">Submitted</label>
+        <select name="submitted" class="form-select">
+          <option value="all">All</option>
+          <option value="yes" {% if filters.submitted == 'yes' %}selected{% endif %}>Yes</option>
+          <option value="no" {% if filters.submitted == 'no' %}selected{% endif %}>No</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="approved">Approved</label>
+        <select name="approved" class="form-select">
+          <option value="all">All</option>
+          <option value="yes" {% if filters.approved == 'yes' %}selected{% endif %}>Yes</option>
+          <option value="no" {% if filters.approved == 'no' %}selected{% endif %}>No</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="date_start">Date Assigned From</label>
+        <input type="date" name="date_start" class="form-control" value="{{ filters.date_start }}">
+      </div>
+      <div class="col-md-3">
+        <label for="date_end">To</label>
+        <input type="date" name="date_end" class="form-control" value="{{ filters.date_end }}">
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary me-2">Apply Filters</button>
+        <a href="{% url 'hr_dashboard' %}" class="btn btn-secondary">Clear All</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- RESULT TABLE -->
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Employee</th>
+        <th>Team Lead</th>
+        <th>Project</th>
+        <th>Assigned Date</th>
+        <th>Submitted Date</th>
+        <th>Approved</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if tasks %}
+        {% for task in tasks %}
+          <tr>
+            <td>{{ task.employee.name }}</td>
+            <td>{{ task.team_lead.name }}</td>
+            <td>{{ task.project.name }}</td>
+            <td>{{ task.date_assigned|date:"M d, Y" }}</td>
+            <td>
+              {% if task.date_submitted %}
+                {{ task.date_submitted|date:"M d, Y" }}
+              {% else %}
+                <span class="text-danger">Not submitted</span>
+              {% endif %}
+            </td>
+            <td>{% if task.approved %}✅{% else %}❌{% endif %}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted">No tasks found for the selected filters.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Chatbot Floating Button -->
+<button id="chatbot-btn">💬</button>
+
+<!-- Chatbot Window -->
+<div id="chatbot-container" style="display:none; position:fixed; bottom:100px; right:30px; width:350px; height:450px; background:white; border:1px solid #ccc; border-radius:8px; overflow:hidden; z-index:1000;">
+    <div id="chatbot-messages" style="height:85%; overflow-y:auto; padding:10px;"></div>
+    <div style="display:flex; padding:5px; border-top:1px solid #ccc;">
+        <input type="text" id="chatbot-input" placeholder="Ask something..." style="flex:1; padding:5px;">
+        <button id="chatbot-send" style="padding:5px 10px; margin-left:5px; background:#007bff; color:white; border:none; cursor:pointer;">Send</button>
+    </div>
+</div>
+
+<script>
+const btn = document.getElementById('chatbot-btn');
+const container = document.getElementById('chatbot-container');
+const messages = document.getElementById('chatbot-messages');
+const input = document.getElementById('chatbot-input');
+const sendBtn = document.getElementById('chatbot-send');
+
+// Toggle chatbot window
+btn.onclick = () => {
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
+};
+
+// Function to send user question to chatbot
+async function sendMessage() {
+    const question = input.value.trim();
+    if (!question) return;
+
+    // Add user's message
+    messages.innerHTML += `<div><b>You:</b> ${question}</div>`;
+    input.value = '';
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+        const res = await fetch("{% url 'hr_chatbot' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({question})
+        });
+
+        const data = await res.json();
+        messages.innerHTML += `<div><b>Bot:</b> ${data.answer}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    } catch (err) {
+        messages.innerHTML += `<div><b>Bot:</b> Error communicating with server.</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    }
+}
+
+// Send button click
+sendBtn.onclick = sendMessage;
+
+// Enter key support
+input.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Assign Task</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    form {
+      background-color: #ffffff;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border 0.3s;
+      margin-bottom: 20px;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+    button[type="submit"] {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background-color: #2980b9;
+    }
+    nav {
+      background-color: #3498db; 
+      padding: 15px 20px; 
+      color: white; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    nav a {
+      color: white; 
+      text-decoration: none; 
+      font-weight: bold; 
+      background-color: #e74c3c; 
+      padding: 8px 14px; 
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <div style="font-size: 20px; font-weight: bold;">Assign Task</div>
+  <div>
+    <a href="{% url 'teamlead_dashboard' %}">Back to Dashboard</a>
+  </div>
+</nav>
+
+<h2>Assign Task</h2>
+<form method="POST">
+    {% csrf_token %}
+    <label>Project:</label>
+    <select name="project" required>
+        {% for project in projects %}
+            <option value="{{ project.id }}">{{ project.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Employee:</label>
+    <select name="employee" required>
+        {% for emp in employees %}
+            <option value="{{ emp.id }}">{{ emp.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Description:</label>
+    <textarea name="description" required></textarea><br><br>
+
+    <button type="submit" class="btn">Assign Task</button>
+</form>
+
+</body>
+</html>

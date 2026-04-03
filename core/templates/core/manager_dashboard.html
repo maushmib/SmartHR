@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manager Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f7f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+    }
+    h3 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+    .table thead th {
+      background-color: #3498db;
+      color: white;
+    }
+    .btn-group {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Manager Dashboard</a>
+    <div>
+      <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Action Buttons -->
+  <div class="btn-group mb-4">
+    <a href="{% url 'allocate_employees' %}" class="btn btn-warning me-2">Allocate Employees</a>
+    <a href="{% url 'manager_create_project' %}" class="btn btn-primary">Create Project</a>
+  </div>
+
+
+  <h3>Team Leads & Their Employees</h3>
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Team Lead</th>
+            <th>Employees</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tl in team_leads %}
+        <tr>
+            <td>{{ tl.name }}</td>
+            <td>
+                {% for emp in tl.employee_set.all %}
+                    {{ emp.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No employees allocated
+                {% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2" class="text-center">No team leads found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</body>
+</html>

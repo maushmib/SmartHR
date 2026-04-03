@@ -1,0 +1,6 @@
+<h2>Recommended Employees for "{{ project.name }}"</h2>
+<ul>
+  {% for emp in recommended %}
+    <li>{{ emp.name }} — {{ emp.job_role }} ({{ emp.department }})</li>
+  {% endfor %}
+</ul>

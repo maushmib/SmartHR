@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Project</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    form {
+      background-color: #ffffff;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    nav {
+      background-color: #3498db;
+      padding: 15px 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      background-color: #e74c3c;
+      padding: 8px 14px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div style="font-size: 20px; font-weight: bold;">Team Lead Dashboard</div>
+  <div>
+    <a href="{% url 'teamlead_dashboard' %}">Back to Dashboard</a>
+  </div>
+</nav>
+
+<h2>Choose a Project</h2>
+
+<form method="POST">
+  {% csrf_token %}
+  <label for="project">Select Project Assigned to You:</label>
+  <select name="project" id="project" required>
+    {% for project in projects %}
+      <option value="{{ project.id }}">{{ project.name }}</option>
+    {% empty %}
+      <option disabled>No projects assigned yet.</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Select Project</button>
+</form>
+
+</body>
+</html>
